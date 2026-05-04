@@ -32,8 +32,10 @@ Inference Pipeline: The trained model (after optimisation and conversion to Tens
 System Output: The final output is a real‑time classification label on the device’s screen. By including a dedicated ‘Unknown’ class derived from the same environmental context, the system is more robust to partially visible or distant animals and avoids forced misclassification.
 
 
-<img width="1336" height="796" alt="image" src="https://github.com/user-attachments/assets/5f6df2ce-4348-4fa6-91c0-c9f4540851aa" />
-
+<img width="1354" height="792" alt="image" src="https://github.com/user-attachments/assets/ea9a54cf-9788-40a9-a64b-224dbf57a329" />
+<p align="left"><em>Flow Chart</em></p>
+ <br>
+ 
 
 
 ## Data
