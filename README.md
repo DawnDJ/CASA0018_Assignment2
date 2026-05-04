@@ -13,15 +13,17 @@ In the suburban and rural areas around London, three reptile species — Adder (
 Traditional identification relies on expert knowledge, which is not accessible to the general public. Recent advances in TinyML and transfer learning have made it possible to deploy lightweight deep learning models directly on mobile devices, enabling real‑time species recognition in the field (David et al., 2021). This project applies transfer learning with pre‑trained lightweight architectures (MobileNetV1, EfficientNet) to distinguish among the three species using a small dataset of publicly available images. The model is then deployed to an Android phone via Edge Impulse, demonstrating how edge‑based AI can help improve outdoor safety and ecological awareness.
 
 <img width="690" height="388" alt="image" src="https://github.com/user-attachments/assets/7577c6c6-7510-4197-a155-57be1fb1a75d" />
-Adder (Viper berus)
+<p align="center"><em>Adder (Viper berus)</em></p>
+ <br>
 
 <img width="690" height="388" alt="image" src="https://github.com/user-attachments/assets/a988eeef-d706-492f-95e8-95a384122af6" />
-Grass snake (Natrix helvetica)
-
+<p align="center"><em>Grass snake (Natrix helvetica)</em></p>
+ <br>
 
 <img width="690" height="388" alt="image" src="https://github.com/user-attachments/assets/951fe44d-4508-4ab4-85c1-064afa598573" />
-Slow-worm (Anguis fragilis)
-
+<p align="center"><em>Slow-worm (Anguis fragilis)m</em></p>
+ <br>
+ 
 ## Research Question
 Can an embedded AI project based on neural networks be constructed to recognize dumbbell exercise movements and assist fitness enthusiasts in counting?  
 
