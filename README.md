@@ -21,7 +21,7 @@ Traditional identification relies on expert knowledge, which is not accessible t
  <br>
 
 <img width="690" height="388" alt="image" src="https://github.com/user-attachments/assets/951fe44d-4508-4ab4-85c1-064afa598573" />
-<p align="left"><em>Slow-worm (Anguis fragilis)m</em></p>
+<p align="left"><em>Slow-worm (Anguis fragilis)</em></p>
  <br>
  
 ## Application Overview
