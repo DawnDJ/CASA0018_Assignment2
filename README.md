@@ -36,7 +36,7 @@ Hardware Setup: All inference and testing are performed on a standard Android sm
 
 Software Workflow: The software pipeline is divided into two parts:
 
-Training Pipeline: A balanced dataset of four classes was compiled from iNaturalist user‑uploaded images. For each of the three target species (Adder, Grass Snake, Slow Worm), 40 images were selected where the animal occupied a significant portion of the frame. For the ‘Unknown’ class, 40 images were created by cropping out purely environmental regions (e.g., grass, leaves, soil, bark) from the same set of species photographs, ensuring that no reptile body parts remained in the crop. This strategy trains the model to recognise “no target species present” without introducing irrelevant external backgrounds. All 160 images were uploaded to Edge Impulse, labelled accordingly, and on‑the‑fly data augmentation (rotation, flip, brightness, zoom) was enabled. The dataset was split into training (80 %) and testing (20 %) subsets.
+Training Pipeline: A balanced dataset of four classes was compiled from iNaturalist user‑uploaded images. For each of the three target species (Adder, Grass Snake, Slow Worm), 40 images were selected where the animal occupied a significant portion of the frame. For the ‘Unknown’ class, 40 images were created by cropping pure environmental regions (e.g., the ground, leaf litter, or nearby background) directly from the 120 species photographs already collected. Every crop was carefully inspected to ensure that no reptile body parts (scales, eyes, body contours, etc.) remained. This strategy guarantees that the ‘Unknown’ class shares the exact same lighting, habitat type and image quality as the target species, forcing the model to learn genuine reptile features rather than relying on generic background cues. All 160 images were uploaded to Edge Impulse, labelled accordingly, and on‑the‑fly data augmentation (rotation, flip, brightness, zoom) was enabled. The dataset was split into training (80 %) and testing (20 %) subsets.
 
 Inference Pipeline: The trained model (after optimisation and conversion to TensorFlow Lite) is deployed to an Android phone via the Edge Impulse ‘Deploy’ App. The user launches the application and points the phone’s camera at a reptile or an ambiguous outdoor scene. The app captures a frame, pre‑processes it, and runs the model. The inference result (e.g., “Adder – Venomous” or “Unknown – No reptile clearly visible”) is displayed on the screen in real‑time.
 
@@ -47,21 +47,20 @@ System Output: The final output is a real‑time classification label on the dev
 
 
 ## Data
-Gesture data are collected by the onboard accelerometer connected to the Arduino Nano (accX, accY, accZ, gyrX, gyrY, gyrZ, magX, magY, magZ). The experiment gathered 966 samples from 10 participants, totaling 34 minutes and 24 seconds, of which 81% and 19% were used for model training and test, respectively. This sample distribution was chosen to maximize the quantity of data and improve model accuracy. Fitness data were categorized into five labels: "Dumbbell Row," "Hammer Curls," "Upright Row," "Deep Squat," and "other". The first four fitness movement data were derived from ten participants of varying genders, heights, and fitness levels, using both left and right hands. They performed the movements by mimicking a standard reference video ("Top dumbbell exercises for your shoulders, back and arms | Technogym United Kingdom," n.d.). Data under the "other" label included potential dumbbell movements during fitness activities such as shaking, lying flat, rolling, and Interference movements. Additionally, the orientation of the dumbbell was considered during data collection, with arrows affixed to the dumbbell to indicate the direction of grip.
+All image data were sourced from iNaturalist, a citizen science platform with geotagged wildlife photographs. The collection and construction of the dataset followed a three‑step process.
 
-Table1: Data Infomation
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/29d13847-f937-4689-aca9-b1bdf5c6c787)
- <br>
+Step 1 – Collecting species images
+For each of the three target species – Adder (Vipera berus), Grass Snake (Natrix helvetica), and Slow Worm (Anguis fragilis) – 40 high‑quality images were selected. Selection criteria included: the animal occupies a substantial portion of the frame, the image is in focus, lighting is natural (not studio), and background is typical of UK suburban/rural habitats (grass, leaves, soil, etc.). This resulted in 120 species images in total.
 
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/4c88ed8a-7670-44b8-8c1f-3c561d5391bb)
+Step 2 – Constructing the ‘Unknown’ class from species images
+The 40 images for the ‘Unknown’ class were cropped directly from the 120 species photographs collected in Step 1. Using Windows screenshot tools (Win + Shift + S), rectangular regions containing no reptile parts were carefully extracted. Priority was given to foreground areas immediately adjacent to the animal (e.g., the ground the snake was resting on, nearby leaves or twigs), because these patches share the same camera distance, lighting and resolution as the target species. Any crop that accidentally included a scale, eye or body contour was discarded. This process yielded exactly 40 clean environmental crops.
 
-<p align="center"><em>Dumbbell exercises I chose</em></p>
- <br>
+Step 3 – Uploading
+The final dataset therefore consists of four balanced classes, each with 40 images:
 
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/cf50bb06-277a-4673-a17a-dc58422b7cb5)
+Table1: Dataset Conponents 
+<img width="1180" height="504" alt="image" src="https://github.com/user-attachments/assets/4d7833ba-87c2-4d6c-ad75-946d5a30e29e" />
 
-<p align="center"><em>Dumbbell</em></p>
- <br>
 
 Data processing involves both pre-processing and post-processing stages. In the pre-processing phase, 30 seconds of continuous motion data are collected, as continuous motion captures transitions between movements and natural variations in the movements, which is closer to real-world usage scenarios ("Continuous motion recognition | Edge Impulse Documentation," 2024). Subsequently, by observing data characteristics, windows are manually segmented into equal 2-second intervals, eliminating intervals between movements and data with indistinct features.
 
