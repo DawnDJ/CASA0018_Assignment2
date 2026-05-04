@@ -33,7 +33,7 @@ System Output: The final output is a real‑time classification label on the dev
 
 
 <img width="1354" height="800" alt="image" src="https://github.com/user-attachments/assets/4af13c84-ab3b-4b7f-815c-9863552c0cf1" />
-<p align="left"><em>Flow Chart</em></p>
+<p align="center"><em>Flow Chart</em></p>
  <br>
  
 
