@@ -25,6 +25,17 @@ Traditional identification relies on expert knowledge, which is not accessible t
  <br>
  
 ## Application Overview
+This project is an end-to-end TinyML application designed to classify three visually similar reptile species that co-inhabit the suburban areas of London. The system operates in two distinct phases—training and inference—as illustrated in the Application Diagram
+
+<img width="1354" height="800" alt="image" src="https://github.com/user-attachments/assets/4af13c84-ab3b-4b7f-815c-9863552c0cf1" />
+<p align="center"><em>Flow Chart</em></p>
+ <br>
+ 
+
+Hardware Setup: All inference and testing are performed on a standard Android smartphone (the author's personal device), utilising its built-in camera as the sole sensor to capture real-time image data of the target species. The training process runs entirely in the cloud via the Edge Impulse Studio on a standard PC.
+
+Software Workflow: The software pipeline is divided into two parts:
+
 Training Pipeline: A balanced dataset of four classes was compiled from iNaturalist user‑uploaded images. For each of the three target species (Adder, Grass Snake, Slow Worm), 40 images were selected where the animal occupied a significant portion of the frame. For the ‘Unknown’ class, 40 images were created by cropping out purely environmental regions (e.g., grass, leaves, soil, bark) from the same set of species photographs, ensuring that no reptile body parts remained in the crop. This strategy trains the model to recognise “no target species present” without introducing irrelevant external backgrounds. All 160 images were uploaded to Edge Impulse, labelled accordingly, and on‑the‑fly data augmentation (rotation, flip, brightness, zoom) was enabled. The dataset was split into training (80 %) and testing (20 %) subsets.
 
 Inference Pipeline: The trained model (after optimisation and conversion to TensorFlow Lite) is deployed to an Android phone via the Edge Impulse ‘Deploy’ App. The user launches the application and points the phone’s camera at a reptile or an ambiguous outdoor scene. The app captures a frame, pre‑processes it, and runs the model. The inference result (e.g., “Adder – Venomous” or “Unknown – No reptile clearly visible”) is displayed on the screen in real‑time.
@@ -32,10 +43,7 @@ Inference Pipeline: The trained model (after optimisation and conversion to Tens
 System Output: The final output is a real‑time classification label on the device’s screen. By including a dedicated ‘Unknown’ class derived from the same environmental context, the system is more robust to partially visible or distant animals and avoids forced misclassification.
 
 
-<img width="1354" height="800" alt="image" src="https://github.com/user-attachments/assets/4af13c84-ab3b-4b7f-815c-9863552c0cf1" />
-<p align="center"><em>Flow Chart</em></p>
- <br>
- 
+
 
 
 ## Data
