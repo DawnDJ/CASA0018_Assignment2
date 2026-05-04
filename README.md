@@ -1,6 +1,7 @@
 #  Edge Reptile Classifier Project
 Author name: Zeyu Zhao  
-Github repo:https://github.com/DawnDJ/CASA0018_Assignment2 /n
+Github repo:https://github.com/DawnDJ/CASA0018_Assignment2
+
 Edge Impulse projects:https://studio.edgeimpulse.com/public/980344/live
 Video presentation:(To     be     pasted      here)
 
