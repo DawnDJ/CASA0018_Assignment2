@@ -24,10 +24,6 @@ Traditional identification relies on expert knowledge, which is not accessible t
 <p align="left"><em>Slow-worm (Anguis fragilis)m</em></p>
  <br>
  
-## Research Question
-Can an embedded AI project based on neural networks be constructed to recognize dumbbell exercise movements and assist fitness enthusiasts in counting?  
-
-
 ## Application Overview
 This project consists of three parts:   
 1) Manual recording of IMU data from dumbbell exercises.
