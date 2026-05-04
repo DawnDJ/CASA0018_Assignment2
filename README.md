@@ -15,6 +15,14 @@ Traditional identification relies on expert knowledge, which is not accessible t
 <img width="690" height="388" alt="image" src="https://github.com/user-attachments/assets/7577c6c6-7510-4197-a155-57be1fb1a75d" />
 Adder (Viper berus)
 
+
+<img width="690" height="388" alt="image" src="https://github.com/user-attachments/assets/f5f93b71-7368-4af0-9eaf-7121d9053620" />
+Grass snake (Natrix helvetica)
+
+
+<img width="690" height="388" alt="image" src="https://github.com/user-attachments/assets/04a19cf4-9a62-4fe5-a509-52fc094c8552" />
+Slow-worm (Anguis fragilis)
+
 ## Research Question
 Can an embedded AI project based on neural networks be constructed to recognize dumbbell exercise movements and assist fitness enthusiasts in counting?  
 
