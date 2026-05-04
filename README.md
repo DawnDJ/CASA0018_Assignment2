@@ -61,6 +61,14 @@ The final dataset therefore consists of four balanced classes, each with 40 imag
 Table1: Dataset Conponents 
 <img width="1180" height="504" alt="image" src="https://github.com/user-attachments/assets/4d7833ba-87c2-4d6c-ad75-946d5a30e29e" />
 
+All 160 images were manually reviewed to remove duplicates, then uploaded to Edge Impulse Studio. Each image was assigned one label: adder, grass_snake, slow_worm, or unknown. The dataset was automatically split into training (80 %, 128 images) and testing (20 %, 32 images) subsets.
+
+Data augmentation: No manual offline augmentation was applied. Instead, during training, Edge Impulse enabled on‑the‑fly augmentation (random rotation, horizontal flip, brightness adjustment, zoom) to improve generalisation.
+
+
+
+
+
 
 Data processing involves both pre-processing and post-processing stages. In the pre-processing phase, 30 seconds of continuous motion data are collected, as continuous motion captures transitions between movements and natural variations in the movements, which is closer to real-world usage scenarios ("Continuous motion recognition | Edge Impulse Documentation," 2024). Subsequently, by observing data characteristics, windows are manually segmented into equal 2-second intervals, eliminating intervals between movements and data with indistinct features.
 
