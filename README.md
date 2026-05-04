@@ -13,7 +13,7 @@ In the suburban and rural areas around London, three reptile species — Adder (
 Traditional identification relies on expert knowledge, which is not accessible to the general public. Recent advances in TinyML and transfer learning have made it possible to deploy lightweight deep learning models directly on mobile devices, enabling real‑time species recognition in the field (David et al., 2021). This project applies transfer learning with pre‑trained lightweight architectures (MobileNetV1, EfficientNet) to distinguish among the three species using a small dataset of publicly available images. The model is then deployed to an Android phone via Edge Impulse, demonstrating how edge‑based AI can help improve outdoor safety and ecological awareness.
 
 <img width="690" height="388" alt="image" src="https://github.com/user-attachments/assets/7577c6c6-7510-4197-a155-57be1fb1a75d" />
-
+Adder (Viper berus)
 
 ## Research Question
 Can an embedded AI project based on neural networks be constructed to recognize dumbbell exercise movements and assist fitness enthusiasts in counting?  
