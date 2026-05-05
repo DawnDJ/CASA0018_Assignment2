@@ -207,7 +207,7 @@ The experiments revealed two unexpected findings. First, EfficientNet‑B0, desp
 
 However, several limitations remain. The dataset (40 images per class from iNaturalist) lacks diversity in lighting, occlusion, and real‑field conditions. Both training and test data came from the same web source, so the 75% accuracy likely overestimates real‑world performance. I did not collect any first‑hand photographs or test the model on live video in an actual outdoor setting.
 
-If more time were available, I would first collect 20‑30 additional images per class under varied weather and lighting conditions, including partially occluded shots. Second, I would implement on‑device int8 quantisation to cut inference time from 3.5 seconds to under 1 second. Finally, I would invite a friend to test the live mobile app in a park with printed reptile images at different distances – providing a realistic performance check beyond the static test set.
+If more time were available, I would collect 20‑30 additional images per class under varied weather and lighting conditions, including partially occluded shots. Moreover, I would go to suburban areas or a zoo to test the live mobile app in a park with printed reptile images at different distances – providing a realistic performance check beyond the static test set.
 
 
 ## Bibliography
