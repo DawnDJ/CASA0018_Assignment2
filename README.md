@@ -106,65 +106,65 @@ Experiment 2 (Increase epochs).
 To address under‑training, we increased epochs to 50 while keeping all other parameters identical. Validation accuracy remained 57.7% (no improvement), but test accuracy rose to 25.0% – still far from usable. The gap between train and test remained large, indicating that MobileNetV1 96×96 simply lacked enough capacity to capture the fine‑grained differences between the reptiles.
 
 <img width="1050" height="816" alt="accuracy loss_curve_2" src="https://github.com/user-attachments/assets/5a8fa0e3-1d70-4fe4-b901-29ab902724f6" />
-<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 1</em></p>
+<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 2</em></p>
 
 <img width="1350" height="1512" alt="train_results_1" src="https://github.com/user-attachments/assets/c3d74388-89f8-4a5b-8183-ad920391df48" />
-<p align="center"><em>Other Results of Metrics on Training Set of Model 1</em></p>
+<p align="center"><em>Other Results of Metrics on Training Set of Model 2</em></p>
 
 <img width="1342" height="1506" alt="train_results_2" src="https://github.com/user-attachments/assets/6cc0cf1c-51e9-4714-b8d6-ccf7e1cbd390" />
-<p align="center"><em>Results on Test Set of Model 1</em></p>
+<p align="center"><em>Results on Test Set of Model 2</em></p>
 
 Experiment 3 (Reduce model size – alpha=0.1).
 We then tested whether a smaller model could even work. Using MobileNetV1 with alpha=0.1 (50 epochs) drastically reduced RAM to 58.5 KB, but test accuracy collapsed to 3.1%. This confirmed that shrinking the model further only worsened performance. Therefore, we abandoned the alpha=0.1 configuration.
 
 <img width="1044" height="810" alt="accuracy loss_curve_3" src="https://github.com/user-attachments/assets/0401e6c8-a37f-4965-8b8e-24eae3356e4f" />
-<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 1</em></p>
+<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 3</em></p>
 
 <img width="1340" height="1494" alt="train_results_3" src="https://github.com/user-attachments/assets/6dc5231f-7c9f-4252-96f1-748aeb6a1624" />
-<p align="center"><em>Other Results of Metrics on Training Set of Model 1</em></p>
+<p align="center"><em>Other Results of Metrics on Training Set of Model 3</em></p>
 
 <img width="1336" height="1418" alt="Test_results_3" src="https://github.com/user-attachments/assets/b855dfbd-6b9d-4fc5-b0fa-b8ab1b6076dc" />
-<p align="center"><em>Results on Test Set of Model 1</em></p>
+<p align="center"><em>Results on Test Set of Model 3</em></p>
 
 
 Experiment 4 (Switch to MobileNetV2).
 Given that MobileNetV1 was too weak, we moved to a more powerful architecture: MobileNetV2 (96×96, alpha=0.35, 50 epochs). Validation accuracy jumped to 69.2%, test accuracy to 43.8% – a substantial improvement. However, test accuracy was still below 50%, and the confusion matrix showed that Grass Snake was often misclassified as Adder (42.9% of Grass Snake test images). This suggested that the 96×96 resolution might be discarding fine details such as the Adder’s zigzag stripe or the Grass Snake’s yellow collar.
 
 <img width="1044" height="818" alt="accuracy loss_curve_4" src="https://github.com/user-attachments/assets/5e5b9456-5e06-4e16-993a-14da108f48f5" />
-<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 1</em></p>
+<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 4</em></p>
 
 <img width="1336" height="1504" alt="train_results_4" src="https://github.com/user-attachments/assets/1793c366-c5b3-4e32-9aa2-8a918e6c3089" />
-<p align="center"><em>Other Results of Metrics on Training Set of Model 1</em></p>
+<p align="center"><em>Other Results of Metrics on Training Set of Model 4</em></p>
 
 <img width="1356" height="1418" alt="Test_results_4" src="https://github.com/user-attachments/assets/9c9766cb-efc5-467e-9acb-7a58309e1d7e" />
-<p align="center"><em>Results on Test Set of Model 1</em></p>
+<p align="center"><em>Results on Test Set of Model 4</em></p>
 
 
 Experiment 5 (Increase resolution).
 To preserve more detail, we kept MobileNetV2 but increased input resolution to 160×160 (still 50 epochs). Test accuracy soared to 75.0% – a dramatic gain. The confusion matrix improved: Adder 75% correct, Slow Worm 100%, Unknown 87.5%. The only remaining weakness was Grass Snake (only 37.5% correct, often confused with Adder). Although inference time increased to 3.5 seconds and RAM to 721.5 KB, the accuracy gain justified the trade‑off for a point‑and‑identify safety tool.
 
 <img width="1032" height="810" alt="accuracy loss_curve_5" src="https://github.com/user-attachments/assets/54afab59-3a35-4036-9024-467a6ea953d5" />
-<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 1</em></p>
+<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 5</em></p>
 
 
 <img width="1362" height="1506" alt="train_results_5" src="https://github.com/user-attachments/assets/ad9e7356-9865-4582-a663-1f42a384a3fb" />
-<p align="center"><em>Other Results of Metrics on Training Set of Model 1</em></p>
+<p align="center"><em>Other Results of Metrics on Training Set of Model 5</em></p>
 
 <img width="1342" height="1298" alt="Test_results_5" src="https://github.com/user-attachments/assets/39206379-1233-4ea0-8132-77ea65cfca9e" />
-<p align="center"><em>Results on Test Set of Model 1</em></p>
+<p align="center"><em>Results on Test Set of Model 5</em></p>
 
 
 Experiment 6 (Try EfficientNet).
 Finally, we tested a state‑of‑the‑art architecture: EfficientNet‑B0 (96×96, 50 epochs). Validation accuracy was 76.9%, but test accuracy was only 56.3% – lower than Exp5. Worse, its inference time was 60 seconds and RAM usage 1.3 MB, making it completely impractical for a mobile application. Hence, EfficientNet was discarded.
 
 <img width="1036" height="808" alt="accuracy loss_curve_1" src="https://github.com/user-attachments/assets/6c768ff3-2207-486b-bbdc-acb435c8c1dd" />
-<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 1</em></p>
+<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 6</em></p>
 
 <img width="1326" height="1492" alt="train_results_6" src="https://github.com/user-attachments/assets/bcb5804d-f9d0-4549-bd8e-80b4073670e2" />
-<p align="center"><em>Other Results of Metrics on Training Set of Model 1</em></p>
+<p align="center"><em>Other Results of Metrics on Training Set of Model 6</em></p>
 
 <img width="1338" height="1290" alt="Test_results_6" src="https://github.com/user-attachments/assets/5270d0d2-411c-4365-8367-550f77886c2f" />
-<p align="center"><em>Results on Test Set of Model 1</em></p>
+<p align="center"><em>Results on Test Set of Model 6</em></p>
 
 
 Final model selection.
