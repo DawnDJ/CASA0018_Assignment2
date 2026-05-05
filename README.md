@@ -113,49 +113,102 @@ Table2: Models Configuration
 <img width="912" height="498" alt="image" src="https://github.com/user-attachments/assets/08223fea-551f-4101-b318-ef6aa24c0613" />
 
 
-
 ## Experiments
-The project conducted three different types of experiments:   
-1. Attempting to distinguish between left and right hand dumbbell movements.  
-2. Adding noise (other) data.  
-3. Modifying training parameters to find the most suitable model.  
-<br>
-Initially, each movement label was further subdivided into left-hand and right-hand actions to try to distinguish between them. However, subsequent tests revealed that the current model's capability to differentiate such subtle differences between the left and right hands was insufficient. Particularly for the dumbbell roll movement, the accuracy was even less than 50%, which is no better than random guessing. Consequently, the project abandoned the distinction between left and right hands and instead added more fitness movements for differentiation.  
+To identify the most suitable model for real‑time mobile recognition of three reptile species (Adder, Grass Snake, Slow Worm) plus an ‘Unknown’ background class, we conducted six systematic experiments. Table 1 summarises the configuration and performance of each experiment. Validation accuracy is the final epoch accuracy on the held‑out validation set (20% of training data). Test accuracy is from the separate test set (20% of total data, never seen during training). On‑device metrics (RAM, Flash, inference time) were measured using the EON compiler (RAM‑optimised) targeting a mobile phone.
 
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/b3004e2a-3985-4ad4-9031-eec6fc028e6d)
-<p align="center"><em> left-hand and right-hand Model testing result</em></p>
-<br>
+Experiment 1 (Baseline).
+We started with the lightest possible model: MobileNetV1, 96×96, alpha=0.25, trained for 20 epochs. The validation accuracy reached 57.7%, but the test accuracy was only 12.5% – a clear sign of severe overfitting. The loss curves showed that validation loss did not decrease after the first few epochs. This suggested that 20 epochs were insufficient for the model to generalise.
 
-The experiments found that without the addition of noise data, the model's accuracy was exceptionally high at 99.4%. However, during actual testing, some non-fitness movements were also misidentified as "fitness movements." This high accuracy rate was misleading due to the lack of noise data, which meant that any captured data was inevitably classified into one of the four fitness movements, even if they were not very similar. After incorporating other data (static, rolling, shaking, non-standard movements, and other fitness activities), the accuracy decreased to 97.18%. However, in practical tests, there were almost no instances of inaccurate recognition. This more realistic setting provided a significant improvement in the model's practical application.  
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/90e924da-c33f-4105-b2ae-0f983bb18191)
-<p align="center"><em> Model testing result without noise data</em></p>
-<br>
+<img width="1036" height="808" alt="accuracy loss_curve_1" src="https://github.com/user-attachments/assets/6c768ff3-2207-486b-bbdc-acb435c8c1dd" />
+<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 1</em></p>
 
-After selecting the model modules, the experiments also involved adjusting the neural network settings, including training cycles, learning rate, batch size, input layer features, and the number of neurons in the dense layer, in an effort to find the most efficient and accurate model configuration. A total of 12 experiments were conducted as follows, resulting in the most satisfactory data settings, achieving a test accuracy of 99.65%:  
+<img width="1350" height="1512" alt="train_results_1" src="https://github.com/user-attachments/assets/c3d74388-89f8-4a5b-8183-ad920391df48" />
+<p align="center"><em>Other Results of Metrics on Training Set of Model 1</em></p>
 
-Table3: Experiment
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/978fa0ef-ebd6-411a-bce3-f600405e0ec8)
-<br>
-Increasing the number of training epochs, although it extends the training time, significantly enhances accuracy. However, prolonged training can lead to overfitting, where the model learns the training data too well to the extent that it cannot generalize to unseen data. Therefore, a dropout layer was added to avoid this issue.  
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/b16af577-efda-464f-8b38-1aa8414742bf)
-<br>
+<img width="1356" height="1296" alt="Test_results_1" src="https://github.com/user-attachments/assets/d3ee104a-c43c-4712-8c4f-d5c5c8d1c737" />
+<p align="center"><em>Results on Test Set of Model 1</em></p>
+
+Experiment 2 (Increase epochs).
+To address under‑training, we increased epochs to 50 while keeping all other parameters identical. Validation accuracy remained 57.7% (no improvement), but test accuracy rose to 25.0% – still far from usable. The gap between train and test remained large, indicating that MobileNetV1 96×96 simply lacked enough capacity to capture the fine‑grained differences between the reptiles.
+
+<img width="1050" height="816" alt="accuracy loss_curve_2" src="https://github.com/user-attachments/assets/5a8fa0e3-1d70-4fe4-b901-29ab902724f6" />
+<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 1</em></p>
+
+<img width="1350" height="1512" alt="train_results_1" src="https://github.com/user-attachments/assets/c3d74388-89f8-4a5b-8183-ad920391df48" />
+<p align="center"><em>Other Results of Metrics on Training Set of Model 1</em></p>
+
+<img width="1342" height="1506" alt="train_results_2" src="https://github.com/user-attachments/assets/6cc0cf1c-51e9-4714-b8d6-ccf7e1cbd390" />
+<p align="center"><em>Results on Test Set of Model 1</em></p>
+
+Experiment 3 (Reduce model size – alpha=0.1).
+We then tested whether a smaller model could even work. Using MobileNetV1 with alpha=0.1 (50 epochs) drastically reduced RAM to 58.5 KB, but test accuracy collapsed to 3.1%. This confirmed that shrinking the model further only worsened performance. Therefore, we abandoned the alpha=0.1 configuration.
+
+<img width="1044" height="810" alt="accuracy loss_curve_3" src="https://github.com/user-attachments/assets/0401e6c8-a37f-4965-8b8e-24eae3356e4f" />
+<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 1</em></p>
+
+<img width="1340" height="1494" alt="train_results_3" src="https://github.com/user-attachments/assets/6dc5231f-7c9f-4252-96f1-748aeb6a1624" />
+<p align="center"><em>Other Results of Metrics on Training Set of Model 1</em></p>
+
+<img width="1336" height="1418" alt="Test_results_3" src="https://github.com/user-attachments/assets/b855dfbd-6b9d-4fc5-b0fa-b8ab1b6076dc" />
+<p align="center"><em>Results on Test Set of Model 1</em></p>
+
+
+Experiment 4 (Switch to MobileNetV2).
+Given that MobileNetV1 was too weak, we moved to a more powerful architecture: MobileNetV2 (96×96, alpha=0.35, 50 epochs). Validation accuracy jumped to 69.2%, test accuracy to 43.8% – a substantial improvement. However, test accuracy was still below 50%, and the confusion matrix showed that Grass Snake was often misclassified as Adder (42.9% of Grass Snake test images). This suggested that the 96×96 resolution might be discarding fine details such as the Adder’s zigzag stripe or the Grass Snake’s yellow collar.
+
+<img width="1044" height="818" alt="accuracy loss_curve_4" src="https://github.com/user-attachments/assets/5e5b9456-5e06-4e16-993a-14da108f48f5" />
+<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 1</em></p>
+
+<img width="1336" height="1504" alt="train_results_4" src="https://github.com/user-attachments/assets/1793c366-c5b3-4e32-9aa2-8a918e6c3089" />
+<p align="center"><em>Other Results of Metrics on Training Set of Model 1</em></p>
+
+<img width="1356" height="1418" alt="Test_results_4" src="https://github.com/user-attachments/assets/9c9766cb-efc5-467e-9acb-7a58309e1d7e" />
+<p align="center"><em>Results on Test Set of Model 1</em></p>
+
+
+Experiment 5 (Increase resolution).
+To preserve more detail, we kept MobileNetV2 but increased input resolution to 160×160 (still 50 epochs). Test accuracy soared to 75.0% – a dramatic gain. The confusion matrix improved: Adder 75% correct, Slow Worm 100%, Unknown 87.5%. The only remaining weakness was Grass Snake (only 37.5% correct, often confused with Adder). Although inference time increased to 3.5 seconds and RAM to 721.5 KB, the accuracy gain justified the trade‑off for a point‑and‑identify safety tool.
+
+<img width="1032" height="810" alt="accuracy loss_curve_5" src="https://github.com/user-attachments/assets/54afab59-3a35-4036-9024-467a6ea953d5" />
+<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 1</em></p>
+
+
+<img width="1362" height="1506" alt="train_results_5" src="https://github.com/user-attachments/assets/ad9e7356-9865-4582-a663-1f42a384a3fb" />
+<p align="center"><em>Other Results of Metrics on Training Set of Model 1</em></p>
+
+<img width="1342" height="1298" alt="Test_results_5" src="https://github.com/user-attachments/assets/39206379-1233-4ea0-8132-77ea65cfca9e" />
+<p align="center"><em>Results on Test Set of Model 1</em></p>
+
+
+Experiment 6 (Try EfficientNet).
+Finally, we tested a state‑of‑the‑art architecture: EfficientNet‑B0 (96×96, 50 epochs). Validation accuracy was 76.9%, but test accuracy was only 56.3% – lower than Exp5. Worse, its inference time was 60 seconds and RAM usage 1.3 MB, making it completely impractical for a mobile application. Hence, EfficientNet was discarded.
+
+<img width="1036" height="808" alt="accuracy loss_curve_1" src="https://github.com/user-attachments/assets/6c768ff3-2207-486b-bbdc-acb435c8c1dd" />
+<p align="center"><em>Accuracy&Loss Curves results on Training Set of Model 1</em></p>
+
+<img width="1326" height="1492" alt="train_results_6" src="https://github.com/user-attachments/assets/bcb5804d-f9d0-4549-bd8e-80b4073670e2" />
+<p align="center"><em>Other Results of Metrics on Training Set of Model 1</em></p>
+
+<img width="1338" height="1290" alt="Test_results_6" src="https://github.com/user-attachments/assets/5270d0d2-411c-4365-8367-550f77886c2f" />
+<p align="center"><em>Results on Test Set of Model 1</em></p>
+
+
+Final model selection.
+Based on the iterative experiments, Exp5 (MobileNetV2, 160×160, alpha=0.35, 50 epochs) was chosen as the final deployed model. It achieves the best balance of test accuracy (75.0%), acceptable memory (721.5 KB RAM) and reasonable inference time for a non‑real‑time safety aid.
+
+<img width="1230" height="764" alt="image" src="https://github.com/user-attachments/assets/2e3d8efb-fa5e-4220-abdb-a3b6647f6a64" />
+<p align="center"><em>Experimental results. Test accuracy are calculated by Quantized (int8) model . On‑device metrics from the EON compiler on a mobile phone target.</em></p>
+
 
 ## Results and Observations
-After extensive experimentation and testing, the model's test accuracy improved from the recommended settings provided by Edge Impulse at 97.18% to 99.65% through designing and fine-tuning the model parameters. Although it is not perfect, it is sufficiently accurate for practical applications. 
-Table4: Final Result
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/78146e9e-9960-4d2d-af11-5c339ecc64e8)
-<br>
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/17127bf8-ab39-43d8-a938-61f09eca35bf)
-<br>
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/7d95efa6-c84f-4efd-88bf-7e1bfc188899)
-<br>
+After iterative experiments, the final model (MobileNetV2, 160×160, 50 epochs) achieved 75.0% test accuracy – a 62.5 percentage point improvement over the baseline (Exp1). The single most effective change was increasing input resolution, which boosted accuracy far more than switching to a more complex architecture (EfficientNet actually performed worse on test data while consuming 10× more resources).
 
-The experiments revealed that the inclusion of 'other' data is crucial for enhancing the practical application capabilities of the AI model. Moreover, various parameters, including training cycles, learning rate, batch size, input layer features, and the number of neurons in the dense layer, are not necessarily better when they are higher or lower. Each change in data can affect training stability, generalization ability, risk of overfitting, convergence speed, and training time. These factors require experimental evaluation and holistic consideration during model training. Furthermore, the practical applicability of a model cannot be solely assessed by its test accuracy. Even with a very high accuracy, there is a risk that the model may not generalize well to unseen data.  
+The experiments revealed two unexpected findings. First, EfficientNet‑B0, despite its state‑of‑the‑art reputation, was impractical for this task: 56.3% test accuracy, 60‑second inference time, and 1.3 MB RAM. Second, the ‘Unknown’ class (cropped environmental patches) worked surprisingly well, achieving 87.5% test accuracy without confusing Adders – validating our cropping strategy.
 
-During the data collection phase, I neglected to differentiate the sources of the training and test data. They were both derived from the same ten individuals and randomly allocated proportionally. If two participants who were not involved in the training data collection could be added, and their data used to test the model, the actual application data of the model would be more realistically reflected. This is because the ultimate users of the model do not originate from the participants in the data collection. Although I invited a friend to test the dumbbell in real-time, and there were no inaccuracies, this test sample size is too small to prove the model's capabilities.  
+However, several limitations remain. The dataset (40 images per class from iNaturalist) lacks diversity in lighting, occlusion, and real‑field conditions. Both training and test data came from the same web source, so the 75% accuracy likely overestimates real‑world performance. I did not collect any first‑hand photographs or test the model on live video in an actual outdoor setting.
 
+If more time were available, I would first collect 20‑30 additional images per class under varied weather and lighting conditions, including partially occluded shots. Second, I would implement on‑device int8 quantisation to cut inference time from 3.5 seconds to under 1 second. Finally, I would invite a friend to test the live mobile app in a park with printed reptile images at different distances – providing a realistic performance check beyond the static test set.
 
-If I had more time, I would first focus on collecting and expanding more data to enhance model stability, while also adding 200 test data points from different participants. Secondly, I would revisit the model approaches that were abandoned during the experiments: distinguishing whether each action is performed by the left hand or the right hand. Due to time and resource constraints, this approach was set aside in the early stages of the project. However, in reality, it could significantly enhance the applicability of the model, providing users with a more customized and interactive experience.  
 
 ## Bibliography
 David, R., Duke, J., Jain, A., et al. (2021). TensorFlow Lite Micro: Embedded Machine Learning on TinyML Systems. In: Proceedings of Machine Learning and Systems (MLSys), 3, pp. 800-811. Available at: https://arxiv.org/abs/2010.08678 (Accessed: 4 May 2026).
