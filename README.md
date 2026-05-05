@@ -31,21 +31,6 @@ This project is an end-to-end TinyML application designed to classify three visu
 <p align="center"><em>Flow Chart</em></p>
  <br>
  
-
-Hardware Setup: All inference and testing are performed on the author's personal Android smartphone, utilising its built-in camera as the sole sensor to capture real-time image data of the target species. The training process runs entirely in the cloud via the Edge Impulse Studio on a standard PC.
-
-Software Workflow: The software pipeline is divided into two parts:
-
-Training Pipeline: A balanced dataset of four classes was compiled from iNaturalist user‑uploaded images. For each of the three target species (Adder, Grass Snake, Slow Worm), 40 images were selected where the animal occupied a significant portion of the frame. For the ‘Unknown’ class, 40 images were created by cropping pure environmental regions such as the ground, leaf litter, or nearby background directly from the 120 species photographs already collected. Every crop was carefully inspected to ensure that no reptile body parts remained. This strategy guarantees that the ‘Unknown’ class shares the exact same lighting, habitat type and image quality as the target species, forcing the model to learn genuine reptile features rather than relying on generic background cues. All 160 images were uploaded to Edge Impulse, labelled accordingly, and on‑the‑fly data augmentation including rotation, flip, brightness and zoom was enabled. The dataset was split into training (80 %) and testing (20 %) subsets.
-
-Inference Pipeline: The trained model (after optimisation and conversion to TensorFlow Lite) is deployed to an Android phone via the Edge Impulse ‘Deploy’ App. The user launches the application and points the phone’s camera at a reptile or an ambiguous outdoor scene. The app captures a frame, pre‑processes it, and runs the model. The inference result, for example, “Adder – Venomous” or “Unknown – No reptile clearly visible” is displayed on the screen in real‑time.
-
-System Output: The final output is a real‑time classification label on the device’s screen. By including a dedicated ‘Unknown’ class derived from the same environmental context, the system is more robust to partially visible or distant animals and avoids forced misclassification.
-
-
-
-
-
 ## Data
 All image data were sourced from iNaturalist, a citizen science platform with geotagged wildlife photographs. The collection and construction of the dataset followed a three‑step process.
 
@@ -53,7 +38,7 @@ Step 1 – Collecting species images
 For each of the three target species – Adder (Vipera berus), Grass Snake (Natrix helvetica), and Slow Worm (Anguis fragilis) – 40 high‑quality images were selected. Selection criteria included: the animal occupies a substantial portion of the frame, the image is in focus, lighting is natural (not studio), and background is typical of UK suburban/rural habitats (grass, leaves, soil, etc.). This resulted in 120 species images in total.
 
 Step 2 – Constructing the ‘Unknown’ class from species images
-The 40 images for the ‘Unknown’ class were cropped directly from the 120 species photographs collected in Step 1. Using Windows screenshot tools (Win + Shift + S), rectangular regions containing no reptile parts were carefully extracted. Priority was given to foreground areas immediately adjacent to the animal (e.g., the ground the snake was resting on, nearby leaves or twigs), because these patches share the same camera distance, lighting and resolution as the target species. Any crop that accidentally included a scale, eye or body contour was discarded. This process yielded exactly 40 clean environmental crops.
+The 40 images for the ‘Unknown’ class were cropped directly from the 120 species photographs collected in Step 1. Using Windows screenshot tools (Win + Shift + S), rectangular regions containing no reptile parts were carefully extracted. This process yielded exactly 40 clean environmental crops.
 
 Step 3 – Uploading
 The final dataset therefore consists of four balanced classes, each with 40 images:
@@ -64,7 +49,7 @@ Table1: Dataset Conponents
 All 160 images were manually reviewed to remove duplicates, then uploaded to Edge Impulse Studio. Each image was assigned one label: adder, grass_snake, slow_worm, or unknown. The dataset was automatically split into training (80 %, 128 images) and testing (20 %, 32 images) subsets.
 
 Pre‑processing: image resizing and colour space
-Once uploaded, Edge Impulse automatically pre‑processes all images through the Image processing block. For this project, two input resolutions were used across experiments: 96×96 pixels (for baseline lightweight models) and 160×160 pixels (to evaluate the impact of higher resolution). The colour space was kept as RGB (3 channels), because subtle colour differences between species (e.g., the brownish‑grey Adder vs. the greenish Grass Snake) may aid discrimination. The resizing mode was set to Fit shortest axis, which preserves the original aspect ratio of each image. This avoids distorting the body proportions of the reptiles (e.g., the stout Adder vs the slender Grass Snake), which is critical for fine‑grained classification.
+Once uploaded, Edge Impulse automatically pre‑processes all images through the Image processing block. For this project, two input resolutions were used across experiments: 96×96 pixels (for baseline lightweight models) and 160×160 pixels (to evaluate the impact of higher resolution). The colour space was kept as RGB (3 channels), because subtle colour differences between species (e.g., the brownish‑grey Adder vs. the greenish Grass Snake) may aid discrimination. The resizing mode was set to Fit shortest axis, which preserves the original aspect ratio of each image. This avoids distorting the body proportions of the reptiles.
 
 <img width="638" height="510" alt="image" src="https://github.com/user-attachments/assets/c4118daf-cc02-4977-a126-dd4e9cd499e3" />
 <p align="center"><em>Image Data Configuration</em></p>
@@ -72,39 +57,28 @@ Once uploaded, Edge Impulse automatically pre‑processes all images through the
 <img width="1348" height="222" alt="image" src="https://github.com/user-attachments/assets/ef83b53c-4ddc-453f-a97e-d634bb796f90" />
 <p align="center"><em>RGB Configuration</em></p>
 
-To improve model generalisation and mitigate overfitting given the relatively small dataset (40 images per class), on‑the‑fly data augmentation was enabled during training. Edge Impulse applies random transformations to each training image in every epoch (random rotation, horizontal flip, brightness adjustment, zoom) to improve generalisation.
-
-All augmentations were applied only to the training set; validation and test sets remained unaltered to provide an unbiased performance estimate. This strategy effectively increased the diversity of the training data without requiring additional manual collection.
+To improve model generalisation and mitigate overfitting given the relatively small dataset , on‑the‑fly data augmentation was enabled during training. Edge Impulse applies random transformations including rotation, horizontal flip, brightness adjustment and zoom to each training image in every epoch to improve generalisation.
 
 <img width="1352" height="1484" alt="image" src="https://github.com/user-attachments/assets/cb718d34-68c1-4e05-9977-66c8bcccfe4d" />
 <p align="center"><em>Transfer Learning Configuration</em></p>
 
-After configuring the Image processing block, Edge Impulse generates a feature vector for each image (e.g., 96×96×3 = 27,648 dimensions) and then projects it into a 2D space using t‑SNE. The resulting Feature Explorer plot provides a visual check of whether the dataset is linearly separable before any model training.
+After configuring the Image processing block, Edge Impulse generates a feature vector for each image and then projects it into a 2D space using t‑SNE. The resulting Feature Explorer plot provides a visual check of whether the dataset is linearly separable before any model training.
 
 <img width="1300" height="616" alt="image" src="https://github.com/user-attachments/assets/b5a13167-474d-457d-8413-6534b10726ed" />
 <p align="center"><em>An Example of Feature Explorer</em></p>
 
 The resulting plot shows that the vast majority of samples from all four classes (Adder, Grass Snake, Slow Worm, Unknown) are sparsely scattered within a small region, without forming any clear or dense clusters. A few individual points lie slightly outside this region, but there is no meaningful separation between the classes – points of different labels are thoroughly intermingled. In particular, the Unknown class (environmental crops) does not stand apart from the animal classes; all classes overlap substantially.
 
-This low‑separability result is expected for a fine‑grained classification task with strong visual similarities. The three reptile species share similar body shapes, colour palettes and natural backgrounds; the Unknown crops were taken from the exact same images, thus sharing identical texture and lighting statistics. Under a simple linear projection (t‑SNE of raw features), these subtle differences are not captured.
-
-This demonstrates why non‑linear feature learning (i.e., deep neural networks) is necessary. The later sections will show that after fine‑tuning pre‑trained models (MobileNetV1, V2, EfficientNet), the networks learned a discriminative embedding and achieving improvements on test accuracy. The Feature Explorer result thus serves as a baseline justification for using transfer learning on this challenging task.
-
+This low‑separability result is expected for a fine‑grained classification task with strong visual similarities. The three reptile species share similar body shapes, colour palettes and natural backgrounds; the Unknown crops were taken from the exact same images, thus sharing identical texture and lighting statistics. Under a simple linear projection (t‑SNE of raw features), these subtle differences are not captured, which demonstrates why non-linear feature learning, namely deep learning is necessary. 
 
 ## Model
 All models were built using Edge Impulse’s Transfer Learning (Image) block. The input images were resized using Fit shortest axis to preserve the original aspect ratio, which is essential for distinguishing the body shape differences between the stocky Adder and the slender Grass Snake. Three pre‑trained architectures were selected for comparison: MobileNetV1, MobileNetV2 and EfficientNet‑B0. All were initialised with ImageNet weights and fine‑tuned on our dataset.
 
 The following fixed hyperparameters were used across all training runs unless stated otherwise:
 
-On‑the‑fly data augmentation: random rotation, horizontal flip, brightness adjustment, random zoom.
-
 Learning rate: 0.0005 for all models
 
-Training/validation split: 80/20 (stratified by class).
-
 Batch size: 32 for MobileNetV1/V2, 16 for EfficientNet (All Edge Impulse default).
-
-Resize mode: Fit shortest axis for all experiments.
 
 For MobileNetV1 we also experimented with two width multipliers (alpha: 0.25 and 0.1) to explore the trade‑off between model size and accuracy. For MobileNetV2 the default alpha (0.35) was used. EfficientNet‑B0 has no alpha parameter.
 
@@ -114,7 +88,7 @@ Table2: Models Configuration
 
 
 ## Experiments
-To identify the most suitable model for real‑time mobile recognition of three reptile species (Adder, Grass Snake, Slow Worm) plus an ‘Unknown’ background class, we conducted six systematic experiments. Table 1 summarises the configuration and performance of each experiment. Validation accuracy is the final epoch accuracy on the held‑out validation set (20% of training data). Test accuracy is from the separate test set (20% of total data, never seen during training). On‑device metrics (RAM, Flash, inference time) were measured using the EON compiler (RAM‑optimised) targeting a mobile phone.
+To identify the most suitable model for real‑time mobile recognition of three reptile species (Adder, Grass Snake, Slow Worm) plus an ‘Unknown’ background class, we conducted six systematic experiments. Table 1 summarises the configuration and performance of each experiment. Validation accuracy is the final epoch accuracy on the held‑out validation set (20% of training data). Test accuracy is from the separate test set (20% of total data, never seen during training). On‑device metrics (RAM, Flash, inference time) were measured using the EON compiler targeting a mobile phone.
 
 Experiment 1 (Baseline).
 We started with the lightest possible model: MobileNetV1, 96×96, alpha=0.25, trained for 20 epochs. The validation accuracy reached 57.7%, but the test accuracy was only 12.5% – a clear sign of severe overfitting. The loss curves showed that validation loss did not decrease after the first few epochs. This suggested that 20 epochs were insufficient for the model to generalise.
@@ -201,7 +175,7 @@ Based on the iterative experiments, Exp5 (MobileNetV2, 160×160, alpha=0.35, 50 
 
 
 ## Results and Observations
-After iterative experiments, the final model (MobileNetV2, 160×160, 50 epochs) achieved 75.0% test accuracy – a 62.5 percentage point improvement over the baseline (Exp1). The single most effective change was increasing input resolution, which boosted accuracy far more than switching to a more complex architecture (EfficientNet actually performed worse on test data while consuming 10× more resources).
+After iterative experiments, the final model (MobileNetV2, 160×160, 50 epochs) achieved 75.0% test accuracy – a 62.5 percentage point improvement over the baseline (Exp1). The single most effective change was increasing input resolution, which boosted accuracy far more than switching to EfficientNet, a more complex architecture.
 
 The experiments revealed two unexpected findings. First, EfficientNet‑B0, despite its state‑of‑the‑art reputation, was impractical for this task: 56.3% test accuracy, 60‑second inference time, and 1.3 MB RAM. Second, the ‘Unknown’ class (cropped environmental patches) worked surprisingly well, achieving 87.5% test accuracy without confusing Adders – validating our cropping strategy.
 
@@ -236,3 +210,4 @@ I, Zeyu Zhao, confirm that the work presented in this assessment is my own. Wher
 *Zeyu Zhao*
 
 ASSESSMENT DATE: 4/5/2026
+Word count: 1750(within 20% margin)
