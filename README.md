@@ -5,7 +5,7 @@ Github repo:https://github.com/DawnDJ/CASA0018_Assignment2
 
 Edge Impulse projects:https://studio.edgeimpulse.com/public/980344/live
 
-Video presentation:(To     be     pasted      here)
+Video presentation:https://mediacentral.ucl.ac.uk/Player/Gj77ce1A
 
 ## Introduction
 In the suburban and rural areas around London, three reptile species — Adder (Vipera berus), Grass Snake (Natrix helvetica), and Slow Worm (Anguis fragilis) — share overlapping habitats. Adders are the only venomous snake native to the UK, while Grass Snakes are harmless and Slow Worms are legless lizards that look like small snakes (Woodland Trust, 2018; Froglife, 2025). Visually, these species are often confused by hikers, gardeners and outdoor workers, presenting a potential safety risk, especially when an Adder is misidentified as a non-venomous snake.
