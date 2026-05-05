@@ -92,31 +92,25 @@ This demonstrates why non‑linear feature learning (i.e., deep neural networks)
 
 
 ## Model
-For continuous motion recognition, Edge Impulse offers DSP modules including Spectral Analysis and IMU (Syntiant). Additionally, the learning blocks provided include Classification and Anomaly Detection (K-means). These tools are integral for effectively processing and learning from sensor data, facilitating the development of robust models for recognizing diverse motion patterns.  
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/7d265477-62ea-4af0-aefc-f96b850b5913)
-<p align="center"><em>DSP modules</em></p>
- <br>
- 
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/6034dd8f-2e45-419d-8ee8-ba3ef0b48fb8)
-<p align="center"><em>learning blocks</em></p>
- <br>
+All models were built using Edge Impulse’s Transfer Learning (Image) block. The input images were resized using Fit shortest axis to preserve the original aspect ratio, which is essential for distinguishing the body shape differences between the stocky Adder and the slender Grass Snake. Three pre‑trained architectures were selected for comparison: MobileNetV1, MobileNetV2 and EfficientNet‑B0. All were initialised with ImageNet weights and fine‑tuned on our dataset.
 
-Under conditions where other variables (training cycles-1, learning rate-0.0005, batch size-32, etc.) were held constant, four tests were conducted with different combinations of the four modules. The experimental results showed that the best performance was achieved using the Spectral Analysis processing block and the Classification Learning Block. When these were applied, the model training reached a test accuracy of 97.18%.  
-<br>
-Table2: Blocks experiment 
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/97c5e744-1324-4c6d-ac0e-4830e5467631)
-<br>
+The following fixed hyperparameters were used across all training runs unless stated otherwise:
 
-The parameter settings for the Spectral Analysis processing block are shown in the diagram below. It includes the setup of a low-pass filter, which helps to remove high-frequency noise from the signal. Subsequently, spectral features are extracted using FFT, and the extracted features undergo logarithmic transformation and frame overlapping to enhance their representational capability. This preprocessing step provides input features for the subsequent machine learning or deep learning models. The DSP results demonstrate a clear attenuation of the signal after 8Hz, indicating that the filter has successfully removed high-frequency noise.  
-The Classification Learning Block offers automated model selection, which is particularly suitable for resource-constrained edge devices (IoT devices). This feature streamlines the deployment process, allowing for efficient model operation within limited hardware capabilities.  
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/e39a2bb9-7a52-4d70-9142-d3102f9c952f)
-<p align="center"><em>DSP Result</em></p>
-<br>
+On‑the‑fly data augmentation: random rotation, horizontal flip, brightness adjustment, random zoom.
 
-The final neural network architecture is depicted in the diagram below.
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/51eb2970-caa3-42f8-a5ed-28964ed599d6)
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/dd034384-25a9-4f97-93fe-03ee3290b778)
+Learning rate: 0.0005 for all models
 
+Training/validation split: 80/20 (stratified by class).
+
+Batch size: 32 for MobileNetV1/V2, 16 for EfficientNet (All Edge Impulse default).
+
+Resize mode: Fit shortest axis for all experiments.
+
+For MobileNetV1 we also experimented with two width multipliers (alpha: 0.25 and 0.1) to explore the trade‑off between model size and accuracy. For MobileNetV2 the default alpha (0.35) was used. EfficientNet‑B0 has no alpha parameter.
+
+
+Table2: Models Configuration
+<img width="912" height="498" alt="image" src="https://github.com/user-attachments/assets/08223fea-551f-4101-b318-ef6aa24c0613" />
 
 
 
@@ -183,9 +177,9 @@ Woodland Trust. (2018). Grass snake or adder? How to tell the difference between
 
 ## Declaration of Authorship
 
-I, Xin Cheng, confirm that the work presented in this assessment is my own. Where information has been derived from other sources, I confirm that this has been indicated in the work.
+I, Zeyu Zhao, confirm that the work presented in this assessment is my own. Where information has been derived from other sources, I confirm that this has been indicated in the work.
 
 
-*XIN CHENG*
+*Zeyu Zhao*
 
-ASSESSMENT DATE: 4/20/2024
+ASSESSMENT DATE: 4/5/2026
