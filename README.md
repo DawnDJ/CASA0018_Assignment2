@@ -63,29 +63,32 @@ Table1: Dataset Conponents
 
 All 160 images were manually reviewed to remove duplicates, then uploaded to Edge Impulse Studio. Each image was assigned one label: adder, grass_snake, slow_worm, or unknown. The dataset was automatically split into training (80 %, 128 images) and testing (20 %, 32 images) subsets.
 
-Data augmentation: No manual offline augmentation was applied. Instead, during training, Edge Impulse enabled on‑the‑fly augmentation (random rotation, horizontal flip, brightness adjustment, zoom) to improve generalisation.
+Pre‑processing: image resizing and colour space
+Once uploaded, Edge Impulse automatically pre‑processes all images through the Image processing block. For this project, two input resolutions were used across experiments: 96×96 pixels (for baseline lightweight models) and 160×160 pixels (to evaluate the impact of higher resolution). The colour space was kept as RGB (3 channels), because subtle colour differences between species (e.g., the brownish‑grey Adder vs. the greenish Grass Snake) may aid discrimination. The resizing mode was set to Fit shortest axis, which preserves the original aspect ratio of each image. This avoids distorting the body proportions of the reptiles (e.g., the stout Adder vs the slender Grass Snake), which is critical for fine‑grained classification.
 
+<img width="638" height="510" alt="image" src="https://github.com/user-attachments/assets/c4118daf-cc02-4977-a126-dd4e9cd499e3" />
+<p align="center"><em>Image Data Configuration</em></p>
 
+<img width="1348" height="222" alt="image" src="https://github.com/user-attachments/assets/ef83b53c-4ddc-453f-a97e-d634bb796f90" />
+<p align="center"><em>RGB Configuration</em></p>
 
+To improve model generalisation and mitigate overfitting given the relatively small dataset (40 images per class), on‑the‑fly data augmentation was enabled during training. Edge Impulse applies random transformations to each training image in every epoch (random rotation, horizontal flip, brightness adjustment, zoom) to improve generalisation.
 
+All augmentations were applied only to the training set; validation and test sets remained unaltered to provide an unbiased performance estimate. This strategy effectively increased the diversity of the training data without requiring additional manual collection.
 
+<img width="1352" height="1484" alt="image" src="https://github.com/user-attachments/assets/cb718d34-68c1-4e05-9977-66c8bcccfe4d" />
+<p align="center"><em>Transfer Learning Configuration</em></p>
 
-Data processing involves both pre-processing and post-processing stages. In the pre-processing phase, 30 seconds of continuous motion data are collected, as continuous motion captures transitions between movements and natural variations in the movements, which is closer to real-world usage scenarios ("Continuous motion recognition | Edge Impulse Documentation," 2024). Subsequently, by observing data characteristics, windows are manually segmented into equal 2-second intervals, eliminating intervals between movements and data with indistinct features.
+After configuring the Image processing block, Edge Impulse generates a feature vector for each image (e.g., 96×96×3 = 27,648 dimensions) and then projects it into a 2D space using t‑SNE. The resulting Feature Explorer plot provides a visual check of whether the dataset is linearly separable before any model training.
 
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/34760eaf-3497-4584-a7dd-e8d7b877dde0)
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/76d69fda-6a06-458b-ab43-f8b391df74f4)
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/bdfedefd-17e9-4f71-8726-e12512b6f849)
-<p align="center"><em>Data of each action completed by cutting</em></p>
- <br>
+<img width="1300" height="616" alt="image" src="https://github.com/user-attachments/assets/b5a13167-474d-457d-8413-6534b10726ed" />
+<p align="center"><em>An Example of Feature Explorer</em></p>
 
-After the initial training of the model, erroneous data are marked with red dots. Among these, disruptive data—flaws present due to manual trimming—are identified and removed. For example, as shown in the incorrect data graph below, the selection of the cropping window is clearly incorrect, featuring nearly a second of stagnant gesture. After removing these data, the model is retrained.
+The resulting plot shows that the vast majority of samples from all four classes (Adder, Grass Snake, Slow Worm, Unknown) are sparsely scattered within a small region, without forming any clear or dense clusters. A few individual points lie slightly outside this region, but there is no meaningful separation between the classes – points of different labels are thoroughly intermingled. In particular, the Unknown class (environmental crops) does not stand apart from the animal classes; all classes overlap substantially.
 
+This low‑separability result is expected for a fine‑grained classification task with strong visual similarities. The three reptile species share similar body shapes, colour palettes and natural backgrounds; the Unknown crops were taken from the exact same images, thus sharing identical texture and lighting statistics. Under a simple linear projection (t‑SNE of raw features), these subtle differences are not captured.
 
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/b974a5cc-6eaf-46b1-a9a9-8186ea50d044)
-
-![image](https://github.com/zczqxc5/casa0018/assets/146037962/34def87f-6455-4191-baf7-fbedeeb6fc35)
-<p align="center"><em>Flaw Data</em></p>
- <br>
+This demonstrates why non‑linear feature learning (i.e., deep neural networks) is necessary. The later sections will show that after fine‑tuning pre‑trained models (MobileNetV1, V2, EfficientNet), the networks learned a discriminative embedding and achieving improvements on test accuracy. The Feature Explorer result thus serves as a baseline justification for using transfer learning on this challenging task.
 
 
 ## Model
